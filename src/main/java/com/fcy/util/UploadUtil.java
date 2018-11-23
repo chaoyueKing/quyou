@@ -162,7 +162,7 @@ public class UploadUtil {
                 String inputName = (String) entry.getKey();
                 String inputValue = (String) entry.getValue();
                 StringBody body = new StringBody(inputValue,  ContentType.TEXT_PLAIN);
-                if ("cookie".equals(inputName)){
+                if ("Cookie".equals(inputName)){
                     httpPost.setHeader(inputName,inputValue);
                     continue;
                 }
@@ -177,7 +177,7 @@ public class UploadUtil {
                 String inputName = (String) entry.getKey();
                 String inputValue = (String) entry.getValue();
                 File file = new File(inputValue);
-                entityBuilder.addBinaryBody(inputName,file,ContentType.MULTIPART_FORM_DATA,file.getName());
+                entityBuilder.addBinaryBody(inputName,file,ContentType.IMAGE_PNG,file.getName());
             }
         }
         try{

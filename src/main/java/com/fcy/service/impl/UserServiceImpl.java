@@ -9,6 +9,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +24,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.fcy.util.HttpClientUtils.cookieStore;
 import static com.fcy.util.HttpClientUtils.getConnection;
 import static com.fcy.util.HttpClientUtils.getRequestMethod;
 import static com.fcy.util.UploadUtil.doUpload;
@@ -81,8 +83,15 @@ public class UserServiceImpl implements UserService {
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode == 302) {
                 LoginModel model = new LoginModel();
+                //获取 cookie 信息
+                List<Cookie> cookies = cookieStore.getCookies();
+                StringBuffer tmpcookies = new StringBuffer();
+                for (Cookie c:cookies) {
+                    tmpcookies.append(c.getName()+"="+ c.getValue()+";");
+                }
                 model.setUserModel(user);
                 model.setStatusCode(statusCode);
+                model.setCookies(tmpcookies.toString());
                 return model;
             } else {
                 System.out.println("当前用户：【" + user.getName() + "】,登录失败。");
@@ -164,6 +173,7 @@ public class UserServiceImpl implements UserService {
                     Map<String, String> textMap = new HashMap<>();
                     textMap.put("id", rwid);
                     textMap.put("youxiid", split[2]);
+                    textMap.put("Cookie",loginModel.getCookies());
                     Map<String, String> fileMap = new HashMap<>();
                     fileMap.put("upfile", pathname + "\\" + f.getName());
                     String upload = doUpload(RW_URL, textMap, fileMap);

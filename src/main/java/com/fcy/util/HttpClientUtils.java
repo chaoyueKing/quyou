@@ -28,12 +28,14 @@ import java.util.Set;
  **/
 public class HttpClientUtils {
 
+
+    public static CookieStore cookieStore = new BasicCookieStore();
     private static PoolingHttpClientConnectionManager connectionManager = null;
     private static HttpClientBuilder httpBuilder = null;
     private static RequestConfig requestConfig = null;
     private static int MAXCONNECTION = 500;
     private static int DEFAULTMAXCONNECTION = 500;
-    private static String IP = "www.quyou1688.com";
+    private static String IP = "www.quyou1688.com/";
     private static int PORT = 80;
     static {
         //设置http的状态参数
@@ -50,6 +52,7 @@ public class HttpClientUtils {
         connectionManager.setMaxPerRoute(new HttpRoute(target), 250);
         httpBuilder = HttpClients.custom();
         httpBuilder.setConnectionManager(connectionManager);
+        httpBuilder.setDefaultCookieStore(cookieStore);
     }
     public static CloseableHttpClient getConnection() {
         CloseableHttpClient httpClient = httpBuilder.build();
