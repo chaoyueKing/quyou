@@ -42,7 +42,8 @@ public interface UserService {
     /**
      *
      * @param loginModel 用户登录信息
-     * @param num 需要领取的任务数量，按任务页面顺序取值
+     * @param num 需要领取的任务数量，按任务页面顺序取值。正常情况为 num 为 2（一天两个任务，领取两天num=2*2，三天num=3*2....）
+     *            【超过7天此路不通】【超过7天此路不通】【超过7天此路不通】【超过7天此路不通】【超过7天此路不通】【超过7天此路不通】
      * @return void
      * @author chaoyue.fan
      * @creed: Talk is cheap,show me the code

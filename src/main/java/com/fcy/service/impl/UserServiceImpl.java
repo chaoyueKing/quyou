@@ -128,6 +128,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void doReceiveByNum(LoginModel loginModel, int num) {
+        if (StringUtils.isEmpty(loginModel))return;
+        if (num>14){
+            System.out.println("超出任务领取上限，此路不通请使用其他方法领取。");
+            return;
+        }
         String message = getResponseBody(RW_LIST_URL+num);
         Document doc = Jsoup.parse(message);
         Elements elements = doc.select(".ui-tab-content").select("a");

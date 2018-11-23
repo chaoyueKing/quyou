@@ -22,7 +22,7 @@ public class LanrenLQTest {
             List<UserModel> users = userServiceImpl.getUsers(GetUserTest.getUser());
             for (UserModel user:users) {
                 LoginModel loginModel = userServiceImpl.doLogin(user);
-                userServiceImpl.doReceiveByNum(loginModel,2);
+                userServiceImpl.doReceiveByNum(loginModel,15);
             }
             System.out.println("程序运行："+(System.currentTimeMillis()-l)/1000+"秒");
         }catch (Exception e){
