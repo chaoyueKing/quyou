@@ -127,17 +127,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void doReceiveByNum(LoginModel loginModel, int num) {
+    public void doReceiveByNum(LoginModel loginModel, Integer days) {
         if (StringUtils.isEmpty(loginModel))return;
-        if (num>14){
-            System.out.println("超出任务领取上限，此路不通请使用其他方法领取。");
-            return;
+        int num; //任务数量：任务数量=days*2 （一天两个任务）
+        if (null==days || days<0){
+            num =1*2; //默认领取一天的任务
+        }else{
+            if (days>7){
+                System.out.println("超出任务领取上限，此路不通请使用其他方法领取。");
+                return;
+            }
+            num = days*2;
         }
         String message = getResponseBody(RW_LIST_URL+num);
         Document doc = Jsoup.parse(message);
         Elements elements = doc.select(".ui-tab-content").select("a");
         String[] rwIds =new String[num];
-        if (elements.isEmpty())return;
+        int size = elements.size();
+        if (size == 0)return;
         for (int i = 0; i< elements.size();i++){
             String lqUrl = QY_URL+elements.get(i).attr("href");
             System.out.println(lqUrl);
