@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String[] getReceiveByNum(Integer days) {
         int num; //任务数量：任务数量=days*2 （一天两个任务）
-        if (null==days || days<0){
+        if (null==days || days<=0){
             num =1*2; //默认领取一天的任务
         }else{
             if (days>7){
