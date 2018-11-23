@@ -146,7 +146,6 @@ public class UserServiceImpl implements UserService {
         if (size == 0)return null;
         for (int i = 0; i< elements.size();i++){
             String lqUrl = QY_URL+elements.get(i).attr("href");
-            System.out.println(lqUrl);
             String msg = getResponseBody(lqUrl);
             Document doc1 = Jsoup.parse(msg);
             Elements elements1 = doc1.select(".bl_view_mall");
@@ -154,7 +153,7 @@ public class UserServiceImpl implements UserService {
                 rwIds[i] = getValueByMatcher(e1.text(),NUM_REGEX);
             }
         }
-        System.out.println(Arrays.toString(rwIds));
+        System.out.println("本次领取的任务id为："+Arrays.toString(rwIds));
         return rwIds;
     }
 
