@@ -25,8 +25,8 @@ public class LanrenLQTest {
                 System.out.println("没有获取到相关用户信息");
                 return;
             }
-            //days：天数 为null时领取当天任务
-            String[] strings = userServiceImpl.doReceiveByNum(null);
+            //根据天数获取任务ids days：天数 为null时领取当天任务
+            String[] strings = userServiceImpl.getReceiveByNum(null);
             for (UserModel user:users) {
                 LoginModel loginModel = userServiceImpl.doLogin(user);
                 userServiceImpl.doReceive(loginModel,strings);

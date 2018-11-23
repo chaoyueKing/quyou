@@ -40,7 +40,7 @@ public interface UserService {
     void doReceive(LoginModel loginModel, String... rwIds);
 
     /**
-     *
+     * 根据天数获取任务ids
      * @param days 需要领取的任务天数，按任务页面顺序取值。num=1 时领取当前日期的任务（num=2，领取【今天+昨天】；num=3，领取【今天+昨天+前天】...）
      *            【超过7天此路不通】【超过7天此路不通】【超过7天此路不通】【超过7天此路不通】【超过7天此路不通】【超过7天此路不通】
      * @return void
@@ -48,7 +48,7 @@ public interface UserService {
      * @creed: Talk is cheap,show me the code
      * @date 2018/11/23 14:15
      */
-    String[] doReceiveByNum(Integer days);
+    String[] getReceiveByNum(Integer days);
 
     /**
      * 提交任务
