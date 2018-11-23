@@ -4,6 +4,7 @@ import com.fcy.model.LoginModel;
 import com.fcy.model.UserModel;
 import com.fcy.service.UserService;
 import com.fcy.service.impl.UserServiceImpl;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -20,10 +21,15 @@ public class LanrenLQTest {
             long l = System.currentTimeMillis();
             UserService userServiceImpl = new UserServiceImpl();
             List<UserModel> users = userServiceImpl.getUsers(GetUserTest.getUser());
+            if (CollectionUtils.isEmpty(users)){
+                System.out.println("没有获取到相关用户信息");
+                return;
+            }
+            //days：天数 为null时领取当天任务
+            String[] strings = userServiceImpl.doReceiveByNum(null);
             for (UserModel user:users) {
                 LoginModel loginModel = userServiceImpl.doLogin(user);
-                //days：天数 为null时领取当天任务
-                userServiceImpl.doReceiveByNum(loginModel,null);
+                userServiceImpl.doReceive(loginModel,strings);
             }
             System.out.println("程序运行："+(System.currentTimeMillis()-l)/1000+"秒");
         }catch (Exception e){

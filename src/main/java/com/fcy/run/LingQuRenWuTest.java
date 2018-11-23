@@ -4,6 +4,7 @@ import com.fcy.model.LoginModel;
 import com.fcy.model.UserModel;
 import com.fcy.service.UserService;
 import com.fcy.service.impl.UserServiceImpl;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -20,6 +21,10 @@ public class LingQuRenWuTest {
             long l = System.currentTimeMillis();
             UserService userServiceImpl = new UserServiceImpl();
             List<UserModel> users = userServiceImpl.getUsers(GetUserTest.getUser());
+            if (CollectionUtils.isEmpty(users)){
+                System.out.println("没有获取到相关用户信息");
+                return;
+            }
             for (UserModel user:users) {
                 LoginModel loginModel = userServiceImpl.doLogin(user);
                 userServiceImpl.doReceive(loginModel,"1811219883","1811211663");
