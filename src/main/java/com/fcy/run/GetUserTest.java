@@ -13,14 +13,6 @@ public class GetUserTest {
     public static GetUserModel getUser(){
         GetUserModel getUserModel = new GetUserModel();
 
-        /*
-        getUserModel.setFormat("0000");
-        getUserModel.setPrefix("fcy");
-        getUserModel.setPwd("11111");
-        getUserModel.setStart(1);
-        getUserModel.setEnd(22);
-*/
-
         getUserModel.setFormat("000");
         getUserModel.setPrefix("yxb");
         getUserModel.setPwd("11111");

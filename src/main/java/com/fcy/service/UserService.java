@@ -40,6 +40,17 @@ public interface UserService {
     void doReceive(LoginModel loginModel, String... rwIds);
 
     /**
+     *
+     * @param loginModel 用户登录信息
+     * @param num 需要领取的任务数量，按任务页面顺序取值
+     * @return void
+     * @author chaoyue.fan
+     * @creed: Talk is cheap,show me the code
+     * @date 2018/11/23 14:15
+     */
+    void doReceiveByNum(LoginModel loginModel,int num);
+
+    /**
      * 提交任务
      * @param loginModel 用户登录信息
      * @param pathname 图片根路径 上传图片命名规则【23-青丘剑姬-王二麻子.png】 ‘23’：代表当前登录账号整数部分，‘青丘剑姬’：游戏没名称，‘王二麻子’：角色名

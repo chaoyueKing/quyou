@@ -24,9 +24,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.fcy.util.HttpClientUtils.cookieStore;
-import static com.fcy.util.HttpClientUtils.getConnection;
-import static com.fcy.util.HttpClientUtils.getRequestMethod;
+import static com.fcy.util.HttpClientUtils.*;
 import static com.fcy.util.UploadUtil.doUpload;
 
 /**
@@ -37,6 +35,7 @@ import static com.fcy.util.UploadUtil.doUpload;
  * @Version: 1.0.0
  **/
 public class UserServiceImpl implements UserService {
+    public static final String QY_URL="http://www.quyou1688.com/";
     //登录URL
     public static final String LOGIN_URL = "http://www.quyou1688.com/login.php";
     //领取任务URL
@@ -49,10 +48,15 @@ public class UserServiceImpl implements UserService {
     public static final String TX_URL = "http://www.quyou1688.com/yuer.php?tixian=";
     //退出url
     public static final String TC_URL="http://www.quyou1688.com/logout.php";
+    //任务列表url
+    public static final String RW_LIST_URL="http://www.quyou1688.com/renwu.php?fenye=";
+
     //整数正则表达式
     public static final String NUM_REGEX = "[^0-9]";
     //汉字正则表达式
     public static final String STRING_REGEX = "[^\\u4e00-\\u9fa5]";
+
+    public static final String[] RW_IDS = null;
 
     private static HttpClient httpClient= getConnection();
 
@@ -120,6 +124,28 @@ public class UserServiceImpl implements UserService {
         }
 
 
+    }
+
+    @Override
+    public void doReceiveByNum(LoginModel loginModel, int num) {
+        String message = getResponseBody(RW_LIST_URL+num);
+        Document doc = Jsoup.parse(message);
+        Elements elements = doc.select(".ui-tab-content").select("a");
+        String[] rwIds =new String[num];
+        if (elements.isEmpty())return;
+        for (int i = 0; i< elements.size();i++){
+            String lqUrl = QY_URL+elements.get(i).attr("href");
+            System.out.println(lqUrl);
+            String msg = getResponseBody(lqUrl);
+            Document doc1 = Jsoup.parse(msg);
+            Elements elements1 = doc1.select(".bl_view_mall");
+            for (Element e1:elements1) {
+                rwIds[i] = getValueByMatcher(e1.text(),NUM_REGEX);
+            }
+        }
+        System.out.println(Arrays.toString(rwIds));
+        doReceive(loginModel,rwIds);
+        return;
     }
 
     @Override
