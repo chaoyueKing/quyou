@@ -25,10 +25,6 @@ public class StatesTest {
                 System.out.println("没有获取到相关用户信息");
                 return;
             }
-            UserModel userModel = new UserModel();
-            userModel.setName("fcy000");
-            userModel.setPassword("`1q`1q`1q");
-            users.add(0,userModel);
             for (UserModel user:users) {
                 LoginModel loginModel = userServiceImpl.doLogin(user);
                 userServiceImpl.getStatus(loginModel);
