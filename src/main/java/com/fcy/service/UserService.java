@@ -68,5 +68,15 @@ public interface UserService {
      */
     void doWithdraw(LoginModel loginModel);
 
+    /**
+     * 获取当前账号审核状态
+     * @param loginModel 用户登录信息
+     * @return void
+     * @author chaoyue.fan
+     * @creed: Talk is cheap,show me the code
+     * @date 2018/11/21 16:10
+     */
+    void getStatus(LoginModel loginModel);
+
 
 }

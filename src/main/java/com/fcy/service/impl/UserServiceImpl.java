@@ -2,6 +2,7 @@ package com.fcy.service.impl;
 
 import com.fcy.model.GetUserModel;
 import com.fcy.model.LoginModel;
+import com.fcy.model.RwStatesModel;
 import com.fcy.model.UserModel;
 import com.fcy.service.UserService;
 import org.apache.http.HttpEntity;
@@ -50,6 +51,9 @@ public class UserServiceImpl implements UserService {
     public static final String TC_URL="http://www.quyou1688.com/logout.php";
     //任务列表url
     public static final String RW_LIST_URL="http://www.quyou1688.com/renwu.php?fenye=";
+
+    //认为记录url
+    public static final String RW_STATS_URL ="http://www.quyou1688.com/renwujilu.php";
 
     //整数正则表达式
     public static final String NUM_REGEX = "[^0-9]";
@@ -240,6 +244,46 @@ public class UserServiceImpl implements UserService {
                 } else {
                     System.out.println("当前登录用户：【" + loginModel.getUserModel().getName() + "】，提现金额：【0】，提现结果：【金额为0无法提现】");
                 }
+            }
+        }catch (Exception e){
+            System.out.println("提现异常：【"+e.getMessage()+"】");
+        }
+    }
+
+    @Override
+    public void getStatus(LoginModel loginModel) {
+        if (StringUtils.isEmpty(loginModel))return;
+        try{
+            String message = getResponseBody(RW_STATS_URL);
+            if (StringUtils.isEmpty(message)){
+                System.out.println("没有获取到对应信息");
+                return;
+            }
+            int connt =0;
+            String userName = loginModel.getUserModel().getName();
+            List<RwStatesModel> rwStatesModelList = new ArrayList<>();
+            Document doc = Jsoup.parse(message);
+            Elements elements = doc.select(".list");
+            for (Element e : elements) {
+                String text = e.select(".ui-badge-muted").text();
+                String h4 = e.select(".ui-list-info").select("h4").text();
+                if ("审核中".equals(text)){
+                    RwStatesModel rwStatesModel = new RwStatesModel();
+                    rwStatesModel.setUserName(userName);
+                    rwStatesModel.setRwName(h4.substring(10));
+                    rwStatesModel.setRwState(text);
+                    rwStatesModelList.add(rwStatesModel);
+                    connt++;
+                }
+            }
+            if (connt>0){
+                System.out.println("当前用户：【"+userName+"】");
+                for (RwStatesModel m :rwStatesModelList) {
+                    System.out.println("\t任务名称：【"+m.getRwName()+"】");
+                    System.out.println("\t任务状态：【"+m.getRwState()+"】");
+                }
+            }else {
+                System.out.println("当前用户：【"+userName+"】，任务已经全部审核。");
             }
         }catch (Exception e){
             System.out.println("提现异常：【"+e.getMessage()+"】");
