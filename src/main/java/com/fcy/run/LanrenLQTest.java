@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * @Program: quyou
- * @Description: 懒人任务领取
+ * @Description: 懒人任务领取 不用从页面抓取任务IDS，自动获取
  * @Author: chaoyue.fan
  * @Create: 2018-11-23 14:13
  * @Version: 1.0.0
