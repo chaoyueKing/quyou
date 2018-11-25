@@ -102,10 +102,10 @@ public class UserServiceImpl implements UserService {
                 model.setCookies(tmpcookies.toString());
                 return model;
             } else {
-                System.out.println("当前用户：【" + user.getName() + "】,登录失败。");
+                System.out.println("当前用户：" + user.getName() + ",登录失败。");
             }
         }catch (Exception e){
-            System.out.println("登录异常:【"+e.getMessage()+"】");
+            System.out.println("登录异常:"+e.getMessage()+"");
         }
 
         return null;
@@ -121,10 +121,10 @@ public class UserServiceImpl implements UserService {
                 HttpResponse response = httpClient.execute(httpGet);
                 HttpEntity entity = response.getEntity();
                 String message = EntityUtils.toString(entity, "utf-8");
-                System.out.println("当前用户：【" + loginModel.getUserModel().getName() + "】，任务id：【" + s + "】,领取状态：【" + getValueByMatcher(message, STRING_REGEX) + "】");
+                System.out.println("当前用户：" + loginModel.getUserModel().getName() + "，任务id：" + s + ",领取状态：" + getValueByMatcher(message, STRING_REGEX) + "");
             }
         }catch (Exception e){
-            System.out.println("领取异常：【"+e.getMessage()+"】");
+            System.out.println("领取异常："+e.getMessage()+"");
         }
 
 
@@ -182,7 +182,7 @@ public class UserServiceImpl implements UserService {
         }
         //无提交任务直接返回
         if (map == null || map.size() == 0){
-            System.out.println("当前用户：【" + loginModel.getUserModel().getName() + "】，暂无可提交任务");
+            System.out.println("当前用户：" + loginModel.getUserModel().getName() + "，暂无可提交任务");
             return;
         }
         //获取用户名整数部分，用来匹配图片
@@ -216,7 +216,7 @@ public class UserServiceImpl implements UserService {
                     Map<String, String> fileMap = new HashMap<>();
                     fileMap.put("upfile", pathname + "\\" + f.getName());
                     String upload = doUpload(RW_URL, textMap, fileMap);
-                    System.out.println("当前用户：【" + loginModel.getUserModel().getName() + ":("+split[2]+")】,上传文件：【" + f.getName() + "】,任务ID：【" + rwid + "】,上传结果：【"+getValueByMatcher(upload,STRING_REGEX)+"】");
+                    System.out.println("当前用户：" + loginModel.getUserModel().getName() + ":("+split[2]+"),上传文件：" + f.getName() + ",任务ID：" + rwid + ",上传结果："+getValueByMatcher(upload,STRING_REGEX)+"");
                 }
             }
         }
@@ -240,13 +240,13 @@ public class UserServiceImpl implements UserService {
                     HttpResponse response = httpClient.execute(httpGet);
                     HttpEntity entity = response.getEntity();
                     String msg = EntityUtils.toString(entity, "utf-8");
-                    System.out.println("当前登录用户：【" + loginModel.getUserModel().getName() + "】，提现金额：【" + text + "】，提现结果：【" + getValueByMatcher(msg, STRING_REGEX) + "】");
+                    System.out.println("当前登录用户：" + loginModel.getUserModel().getName() + "，提现金额：" + text + "，提现结果：" + getValueByMatcher(msg, STRING_REGEX) + "");
                 } else {
-                    System.out.println("当前登录用户：【" + loginModel.getUserModel().getName() + "】，提现金额：【0】，提现结果：【金额为0无法提现】");
+                    System.out.println("当前登录用户：" + loginModel.getUserModel().getName() + "，提现金额：0，提现结果：金额为0无法提现");
                 }
             }
         }catch (Exception e){
-            System.out.println("提现异常：【"+e.getMessage()+"】");
+            System.out.println("提现异常："+e.getMessage()+"");
         }
     }
 
@@ -277,16 +277,16 @@ public class UserServiceImpl implements UserService {
                 }
             }
             if (connt>0){
-                System.out.println("当前用户：【"+userName+"】");
+                System.out.println("当前用户："+userName+"");
                 for (RwStatesModel m :rwStatesModelList) {
-                    System.out.println("\t任务名称：【"+m.getRwName()+"】");
-                    System.out.println("\t任务状态：【"+m.getRwState()+"】");
+                    System.out.println("\t任务名称："+m.getRwName()+"");
+                    System.out.println("\t任务状态："+m.getRwState()+"");
                 }
             }else {
-                System.out.println("当前用户：【"+userName+"】，任务已经全部审核。");
+                System.out.println("当前用户："+userName+"，任务已经全部审核。");
             }
         }catch (Exception e){
-            System.out.println("提现异常：【"+e.getMessage()+"】");
+            System.out.println("获取异常："+e.getMessage()+"");
         }
     }
 
@@ -326,7 +326,7 @@ public class UserServiceImpl implements UserService {
             String message = EntityUtils.toString(entity, "utf-8");
             return message;
         }catch (Exception e){
-            System.out.println("获取连接信息异常：【"+e.getMessage()+"】");
+            System.out.println("获取连接信息异常："+e.getMessage()+"");
         }
         return null;
     }
