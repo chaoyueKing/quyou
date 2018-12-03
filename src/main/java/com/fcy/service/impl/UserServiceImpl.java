@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
     public void doReceive(LoginModel loginModel, String... rwIds){
         if (StringUtils.isEmpty(loginModel))return;
         if (StringUtils.isEmpty(rwIds))return;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyMM");
+        SimpleDateFormat sdf = new SimpleDateFormat("yy");
         String format = sdf.format(new Date());
         try{
             for (String s : rwIds) {
@@ -159,10 +159,7 @@ public class UserServiceImpl implements UserService {
             String lqUrl = QY_URL+elements.get(i).attr("href");
             String msg = getResponseBody(lqUrl);
             Document doc1 = Jsoup.parse(msg);
-            String text = doc1.select(".go_buy").select("a").text();
-            if (text.contains("任务已结束")){
-                continue;
-            }
+            //String text = doc1.select(".go_buy").select("a").text();
             String text1 = doc1.select(".bl_view_mall").text();
             rwIds.add(getValueByMatcher(text1,NUM_REGEX));
         }
