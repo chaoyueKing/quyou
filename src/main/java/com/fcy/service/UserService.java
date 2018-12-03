@@ -48,7 +48,7 @@ public interface UserService {
      * @creed: Talk is cheap,show me the code
      * @date 2018/11/23 14:15
      */
-    String[] getReceiveByNum(Integer days);
+    List<String> getReceiveByNum(Integer days);
 
     /**
      * 提交任务

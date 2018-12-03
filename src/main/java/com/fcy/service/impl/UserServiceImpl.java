@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import java.io.File;
 import java.io.FileFilter;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -115,8 +116,14 @@ public class UserServiceImpl implements UserService {
     public void doReceive(LoginModel loginModel, String... rwIds){
         if (StringUtils.isEmpty(loginModel))return;
         if (StringUtils.isEmpty(rwIds))return;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMM");
+        String format = sdf.format(new Date());
         try{
             for (String s : rwIds) {
+                if (s.length() != 10 || !s.startsWith(format)){
+                    System.out.println("任务id："+s+"非正常任务id，代码自动跳过领取");
+                    continue;
+                }
                 HttpGet httpGet = new HttpGet(LQRW_URL + s);
                 HttpResponse response = httpClient.execute(httpGet);
                 HttpEntity entity = response.getEntity();
@@ -131,7 +138,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String[] getReceiveByNum(Integer days) {
+    public List<String> getReceiveByNum(Integer days) {
         int num; //任务数量：任务数量=days*2 （一天两个任务）
         if (null==days || days<=0){
             num =1*2; //默认领取一天的任务
@@ -142,22 +149,24 @@ public class UserServiceImpl implements UserService {
             }
             num = days*2;
         }
+        List<String> rwIds = new ArrayList<>();
         String message = getResponseBody(RW_LIST_URL+num);
         Document doc = Jsoup.parse(message);
         Elements elements = doc.select(".ui-tab-content").select("a");
-        String[] rwIds =new String[num];
         int size = elements.size();
         if (size == 0)return null;
         for (int i = 0; i< elements.size();i++){
             String lqUrl = QY_URL+elements.get(i).attr("href");
             String msg = getResponseBody(lqUrl);
             Document doc1 = Jsoup.parse(msg);
-            Elements elements1 = doc1.select(".bl_view_mall");
-            for (Element e1:elements1) {
-                rwIds[i] = getValueByMatcher(e1.text(),NUM_REGEX);
+            String text = doc1.select(".go_buy").select("a").text();
+            if (text.contains("任务已结束")){
+                continue;
             }
+            String text1 = doc1.select(".bl_view_mall").text();
+            rwIds.add(getValueByMatcher(text1,NUM_REGEX));
         }
-        System.out.println("本次领取的任务id为："+Arrays.toString(rwIds));
+        System.out.println("本次领取的任务id为："+rwIds.toString());
         return rwIds;
     }
 
@@ -176,7 +185,7 @@ public class UserServiceImpl implements UserService {
         Document doc = Jsoup.parse(message);
         Elements elements = doc.select("option");
         for (Element e : elements) {
-            if (!StringUtils.isEmpty(e.val())) {
+            if (!StringUtils.isEmpty(e.val()) && e.text().length()>2) {
                 map.put(e.val(), e.text());
             }
         }
@@ -271,7 +280,7 @@ public class UserServiceImpl implements UserService {
             for (Element e : elements) {
                 String text = e.select(".ui-badge-muted").text();
                 String h4 = e.select(".ui-list-info").select("h4").text();
-                if ("审核中".equals(text)){
+                if (!"已审核".equals(text) && h4.length()>10){
                     RwStatesModel rwStatesModel = new RwStatesModel();
                     rwStatesModel.setUserName(userName);
                     rwStatesModel.setRwName(h4.substring(10));
