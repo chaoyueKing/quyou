@@ -26,10 +26,10 @@ public class LanrenLQTest {
                 return;
             }
             //根据天数获取任务ids days：天数 为null时领取当天任务
-            String[] strings = userServiceImpl.getReceiveByNum(null);
+            List<String> receiveByNum = userServiceImpl.getReceiveByNum(null);
             for (UserModel user:users) {
                 LoginModel loginModel = userServiceImpl.doLogin(user);
-                userServiceImpl.doReceive(loginModel,strings);
+                userServiceImpl.doReceive(loginModel, receiveByNum.toArray(new String[receiveByNum.size()]));
             }
             System.out.println("程序运行："+(System.currentTimeMillis()-l)/1000+"秒");
         }catch (Exception e){
