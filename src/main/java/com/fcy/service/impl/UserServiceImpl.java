@@ -213,6 +213,10 @@ public class UserServiceImpl implements UserService {
             for (File f : files) {
                 String fileName = f.getName().replaceAll("(.jpg|.png|.bmp|.gif)", "");//获得图片名称
                 String[] split = fileName.split("-");//根据规则切分图片名
+                if (StringUtils.isEmpty(split[0]) || StringUtils.isEmpty(split[1])|| StringUtils.isEmpty(split[2])){
+                    System.out.println("图片:["+fileName+"]命名规则有问题，请排查出来");
+                    return;
+                }
                 if (!StringUtils.isEmpty(rwname) && rwname.contains(split[1])) {
                     //封装上传信息
                     Map<String, String> textMap = new HashMap<>();
