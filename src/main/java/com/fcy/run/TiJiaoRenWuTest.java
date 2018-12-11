@@ -3,9 +3,12 @@ package com.fcy.run;
 import com.fcy.model.LoginModel;
 import com.fcy.model.UserModel;
 import com.fcy.service.impl.UserServiceImpl;
+import com.fcy.util.ForFile;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+
+import static com.fcy.run.GetUserTest.getFileName;
 
 /**
  * @Program: quyou
@@ -28,6 +31,7 @@ public class TiJiaoRenWuTest {
                 LoginModel loginModel = userServiceImpl.doLogin(user);
                 userServiceImpl.doSumbit(loginModel,"D:\\yxb\\Screenshots");
             }
+            ForFile.delFile(getFileName()+userServiceImpl.SC_LOG_NAME);
             System.out.println("程序运行："+(System.currentTimeMillis()-l)/1000+"秒");
         }catch (Exception e){
             e.printStackTrace();

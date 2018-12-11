@@ -3,9 +3,12 @@ package com.fcy.run;
 import com.fcy.model.LoginModel;
 import com.fcy.model.UserModel;
 import com.fcy.service.impl.UserServiceImpl;
+import com.fcy.util.ForFile;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+
+import static com.fcy.run.GetUserTest.getFileName;
 
 /**
  * @Program: quyou
@@ -29,6 +32,7 @@ public class TixianTest {
                 userServiceImpl.doWithdraw(loginModel);
             }
             System.out.println("程序运行："+(System.currentTimeMillis()-l)/1000+"秒");
+            ForFile.delFile(getFileName()+userServiceImpl.TX_LOG_NAME);
         }catch (Exception e){
             e.printStackTrace();
         }

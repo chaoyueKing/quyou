@@ -26,6 +26,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.fcy.util.ForFile.createFile;
+import static com.fcy.util.ForFile.filenameTemp;
+import static com.fcy.util.ForFile.writeFileContent;
 import static com.fcy.util.HttpClientUtils.*;
 import static com.fcy.util.UploadUtil.doUpload;
 
@@ -61,7 +64,10 @@ public class UserServiceImpl implements UserService {
     //汉字正则表达式
     public static final String STRING_REGEX = "[^\\u4e00-\\u9fa5]";
 
-    public static final String[] RW_IDS = null;
+    public static final String SC_LOG_NAME = "SC";
+    public static final String TX_LOG_NAME = "TX";
+
+    public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
 
     private static HttpClient httpClient= getConnection();
 
@@ -218,6 +224,12 @@ public class UserServiceImpl implements UserService {
                     return;
                 }
                 if (!StringUtils.isEmpty(rwname) && rwname.contains(split[1])) {
+                    StringBuffer sb = new StringBuffer("{");
+                    sb.append("\"name\":"+"\""+loginModel.getUserModel().getName()+"\"");
+                    sb.append(",\"rwid\":"+"\""+rwid+"\"");
+                    sb.append(",\"rwname\":"+"\""+rwname.replaceAll(" ","")+"\"");
+                    sb.append("},");
+                    writeLogContent(SC_LOG_NAME,sb.toString());
                     //封装上传信息
                     Map<String, String> textMap = new HashMap<>();
                     textMap.put("id", rwid);
@@ -226,7 +238,9 @@ public class UserServiceImpl implements UserService {
                     Map<String, String> fileMap = new HashMap<>();
                     fileMap.put("upfile", pathname + "\\" + f.getName());
                     String upload = doUpload(RW_URL, textMap, fileMap);
-                    System.out.println("当前用户：" + loginModel.getUserModel().getName() + ":("+split[2]+"),上传文件：" + f.getName() + ",任务ID：" + rwid + ",上传结果："+getValueByMatcher(upload,STRING_REGEX)+"");
+                    String uploadmsg = "当前用户：" + loginModel.getUserModel().getName() + ":("+split[2]+"),上传文件：" + f.getName() + ",任务ID：" + rwid + ",上传结果："+getValueByMatcher(upload,STRING_REGEX);
+                    writeLogContent(SC_LOG_NAME,uploadmsg);
+                    System.out.println(uploadmsg);
                 }
             }
         }
@@ -250,8 +264,12 @@ public class UserServiceImpl implements UserService {
                     HttpResponse response = httpClient.execute(httpGet);
                     HttpEntity entity = response.getEntity();
                     String msg = EntityUtils.toString(entity, "utf-8");
+                    String txmsg = "当前登录用户：" + loginModel.getUserModel().getName() + "，提现金额：" + text + "，提现结果：" + getValueByMatcher(msg, STRING_REGEX);
+                    writeLogContent(TX_LOG_NAME,txmsg);
                     System.out.println("当前登录用户：" + loginModel.getUserModel().getName() + "，提现金额：" + text + "，提现结果：" + getValueByMatcher(msg, STRING_REGEX) + "");
                 } else {
+                    String txmsg = "当前登录用户：" + loginModel.getUserModel().getName() + "，提现金额：0，提现结果：金额为0无法提现 \r\n";
+                    writeLogContent(TX_LOG_NAME,txmsg);
                     System.out.println("当前登录用户：" + loginModel.getUserModel().getName() + "，提现金额：0，提现结果：金额为0无法提现");
                 }
             }
@@ -339,6 +357,19 @@ public class UserServiceImpl implements UserService {
             System.out.println("获取连接信息异常："+e.getMessage()+"");
         }
         return null;
+    }
+
+    private void writeLogContent(String name,String content){
+        String format = simpleDateFormat.format(new Date());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        boolean myfile = createFile(format+name, "["+sdf.format(new Date())+"]："+content);
+        if(!myfile){
+            try{
+                writeFileContent(filenameTemp,"["+sdf.format(new Date())+"]："+content);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     private void tuiChui() throws Exception{
